@@ -7,6 +7,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/client
     username: postgres
     password: nonochais
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
   jpa:
     properties:
