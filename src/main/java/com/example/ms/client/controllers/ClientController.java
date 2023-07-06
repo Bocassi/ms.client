@@ -29,35 +29,35 @@ public class ClientController extends ExceptionController {
     public ClientController(ClientService clientService) { this.clientService = clientService; }
 
     @ApiOperation(value = "Create new client", notes = "Creates a new client", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<Client> createClient(@Valid @RequestBody CreateClientRequest createClientRequest) {
 
         return new ResponseEntity<>(clientService.createClient(createClientRequest), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Gets all clients", notes = "Returns a list of the id, first name and last names of all the clients", produces = MediaType.APPLICATION_JSON_VALUE)
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public ResponseEntity<List<GetAllClientsResponse>> getAllClients() {
 
         return new ResponseEntity<>(clientService.getAllClients(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Gets a client by id", notes = "Returns all the information of a client based on their id", produces = MediaType.APPLICATION_JSON_VALUE)
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Client> getClientById(@PathVariable @Positive(message = "'id' must be a positive value") Long id) {
 
         return new ResponseEntity<>(clientService.getClientById(id), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Updates a client", notes = "Updates one or more fields from an existing client", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{id}")
     public ResponseEntity<Client> updateClient(@PathVariable @Positive(message = "'id' must be a positive value") Long id, @Valid @RequestBody UpdateClientRequest updateClientRequest) {
 
         return new ResponseEntity<>(clientService.updateClient(id, updateClientRequest), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Deletes a client", notes = "Deletes a client", produces = MediaType.APPLICATION_JSON_VALUE)
-    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}")
     public void deleteClient(@PathVariable @Positive(message = "'id' must be a positive value") Long id) {
 
         clientService.deleteClient(id);
