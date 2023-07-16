@@ -1,6 +1,5 @@
 package com.example.ms.client.exceptions;
 
-import com.example.ms.client.controllers.ClientController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
