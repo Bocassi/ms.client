@@ -3,6 +3,7 @@ package com.example.ms.client.controllers;
 import com.example.ms.client.controllers.dtos.requests.CreateClientRequest;
 import com.example.ms.client.controllers.dtos.requests.UpdateClientRequest;
 import com.example.ms.client.controllers.dtos.responses.GetAllClientsResponse;
+import com.example.ms.client.controllers.dtos.responses.GetMoviesByClientNumberResponse;
 import com.example.ms.client.entities.Client;
 import com.example.ms.client.exceptions.ExceptionController;
 import com.example.ms.client.services.ClientService;
@@ -62,4 +63,18 @@ public class ClientController extends ExceptionController {
 
         clientService.deleteClient(id);
     }
+
+    @ApiOperation(value = "Gets a list of movies by client number", notes = "Gets a list of all the movies rented for a given client number", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/movies")
+    public ResponseEntity<List<GetMoviesByClientNumberResponse>> getMoviesByClientNumber(@RequestParam String clientNumber) {
+
+        return new ResponseEntity<>(clientService.getMoviesByClientNumber(clientNumber), HttpStatus.OK);
+    }
+
+    @GetMapping (value = "/client-by-clientNumber")
+    public ResponseEntity<Client> getClientByClientNumber(@RequestParam String clientNumber) {
+
+        return new ResponseEntity<>(clientService.getClientByClientNumber(clientNumber), HttpStatus.OK);
+    }
+
 }

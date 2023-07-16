@@ -12,13 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ClientServiceImplTest {
 
@@ -27,11 +26,13 @@ class ClientServiceImplTest {
 
     private ClientService clientService;
 
+    private RestTemplate restTemplate;
+
     @BeforeEach
     void setUp() {
 
         MockitoAnnotations.openMocks(this);
-        clientService = new ClientServiceImpl(clientRepository);
+        clientService = new ClientServiceImpl(clientRepository, restTemplate);
     }
 
     @Test

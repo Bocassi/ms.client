@@ -3,16 +3,17 @@ package com.example.ms.client.services.impl;
 import com.example.ms.client.controllers.dtos.requests.CreateClientRequest;
 import com.example.ms.client.controllers.dtos.requests.UpdateClientRequest;
 import com.example.ms.client.controllers.dtos.responses.GetAllClientsResponse;
+import com.example.ms.client.controllers.dtos.responses.GetMoviesByClientNumberResponse;
 import com.example.ms.client.entities.Client;
 import com.example.ms.client.repositories.ClientRepository;
 import com.example.ms.client.services.ClientService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +21,16 @@ import java.util.Optional;
 @Service
 public class ClientServiceImpl implements ClientService {
 
-     private ClientRepository clientRepository;
+    private ClientRepository clientRepository;
 
-    public ClientServiceImpl(ClientRepository clientRepository) { this.clientRepository = clientRepository; }
+    private final RestTemplate restTemplate;
+    @Value("${movie.service.url}")
+    private String movieServiceUrl;
+
+    public ClientServiceImpl(ClientRepository clientRepository, RestTemplate restTemplate) {
+        this.clientRepository = clientRepository;
+        this.restTemplate = restTemplate;
+    }
     @Override
     public Client createClient(CreateClientRequest createClientRequest) {
 
@@ -77,7 +85,6 @@ public class ClientServiceImpl implements ClientService {
 
             clientRepository.deleteById(id);
         }   else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found");
-
     }
 
     @Override
@@ -116,5 +123,34 @@ public class ClientServiceImpl implements ClientService {
             return clientRepository.save(client);
 
         }   else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found");
+    }
+
+    @Override
+    public List<GetMoviesByClientNumberResponse> getMoviesByClientNumber(String clientNumber) {
+
+       String url = movieServiceUrl + "/movie/movies?clientNumber=" + clientNumber;
+
+       Optional<Client> optionalClient = clientRepository.findByClientNumber(clientNumber);
+
+       if (optionalClient.isPresent()) {
+
+           try {
+               return restTemplate.getForObject(url, List.class);
+           } catch (RuntimeException e) {
+
+               throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This client doesn't have any rented movies");
+           }
+       } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The client number doesn't exist");
+    }
+
+    @Override
+    public Client getClientByClientNumber(String clientNumber) {
+
+        Optional<Client> optionalClient = clientRepository.findClientByClientNumber(clientNumber);
+
+        if(optionalClient.isPresent()) {
+
+            return optionalClient.get();
+        }   else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This client doesn't exists");
     }
 }
