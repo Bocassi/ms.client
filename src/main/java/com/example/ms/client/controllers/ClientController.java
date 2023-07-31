@@ -1,6 +1,8 @@
 package com.example.ms.client.controllers;
 
 import com.example.ms.client.controllers.dtos.requests.CreateClientRequest;
+import com.example.ms.client.controllers.dtos.requests.RentMovieRequest;
+import com.example.ms.client.controllers.dtos.requests.ReturnMovieRequest;
 import com.example.ms.client.controllers.dtos.requests.UpdateClientRequest;
 import com.example.ms.client.controllers.dtos.responses.GetAllClientsResponse;
 import com.example.ms.client.controllers.dtos.responses.GetMoviesByClientNumberResponse;
@@ -12,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,10 +74,22 @@ public class ClientController extends ExceptionController {
         return new ResponseEntity<>(clientService.getMoviesByClientNumber(clientNumber), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Gets a client by client number", notes = "Gets all the information of a client for a given client number", produces = MediaType.APPLICATION_JSON_VALUE)
     @GetMapping (value = "/client-by-clientNumber")
     public ResponseEntity<Client> getClientByClientNumber(@RequestParam String clientNumber) {
 
         return new ResponseEntity<>(clientService.getClientByClientNumber(clientNumber), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/rent")
+    public ResponseEntity<String> rentMovie(@RequestBody RentMovieRequest rentMovieRequest) {
+
+        return new ResponseEntity<>(clientService.rentMovie(rentMovieRequest), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/return")
+    public ResponseEntity<String> returnMovie(@RequestBody ReturnMovieRequest returnMovieRequest) {
+
+        return new ResponseEntity<>(clientService.returnMovie(returnMovieRequest), HttpStatus.OK);
+    }
 }
