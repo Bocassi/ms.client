@@ -1,8 +1,7 @@
 package com.example.ms.client.controllers;
 
 import com.example.ms.client.controllers.dtos.requests.CreateClientRequest;
-import com.example.ms.client.controllers.dtos.requests.RentMovieRequest;
-import com.example.ms.client.controllers.dtos.requests.ReturnMovieRequest;
+import com.example.ms.client.controllers.dtos.requests.RentAndReturnMovieRequest;
 import com.example.ms.client.controllers.dtos.requests.UpdateClientRequest;
 import com.example.ms.client.controllers.dtos.responses.GetAllClientsResponse;
 import com.example.ms.client.controllers.dtos.responses.GetMoviesByClientNumberResponse;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,14 +80,14 @@ public class ClientController extends ExceptionController {
     }
 
     @PutMapping(value = "/rent")
-    public ResponseEntity<String> rentMovie(@RequestBody RentMovieRequest rentMovieRequest) {
+    public ResponseEntity<String> rentMovie(@RequestBody RentAndReturnMovieRequest rentAndReturnMovieRequest) {
 
-        return new ResponseEntity<>(clientService.rentMovie(rentMovieRequest), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.rentMovie(rentAndReturnMovieRequest), HttpStatus.OK);
     }
 
     @PutMapping(value = "/return")
-    public ResponseEntity<String> returnMovie(@RequestBody ReturnMovieRequest returnMovieRequest) {
+    public ResponseEntity<String> returnMovie(@RequestBody RentAndReturnMovieRequest rentAndReturnMovieRequest) {
 
-        return new ResponseEntity<>(clientService.returnMovie(returnMovieRequest), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.returnMovie(rentAndReturnMovieRequest), HttpStatus.OK);
     }
 }

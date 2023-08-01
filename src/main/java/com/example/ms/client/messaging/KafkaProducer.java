@@ -1,8 +1,7 @@
 package com.example.ms.client.messaging;
 
 
-import com.example.ms.client.controllers.dtos.requests.RentMovieRequest;
-import com.example.ms.client.controllers.dtos.requests.ReturnMovieRequest;
+import com.example.ms.client.controllers.dtos.requests.RentAndReturnMovieRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -10,23 +9,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, RentMovieRequest> kafkaRentTemplate;
-
-    private final KafkaTemplate<String, ReturnMovieRequest> kafkaReturnTemplate;
+    private final KafkaTemplate<String, RentAndReturnMovieRequest> kafkaRentAndReturnTemplate;
 
     @Autowired
-    public KafkaProducer(KafkaTemplate<String, RentMovieRequest> kafkaRentTemplate, KafkaTemplate<String, ReturnMovieRequest> kafkaReturnTemplate) {
-        this.kafkaRentTemplate = kafkaRentTemplate;
-        this.kafkaReturnTemplate = kafkaReturnTemplate;
+    public KafkaProducer(KafkaTemplate<String, RentAndReturnMovieRequest> kafkaRentAndReturnTemplate) {
+        this.kafkaRentAndReturnTemplate = kafkaRentAndReturnTemplate;
     }
 
-    public void sendRentMovie(RentMovieRequest rentMovieRequest) {
+    public void sendRentMovie(RentAndReturnMovieRequest rentAndReturnMovieRequest) {
 
-        kafkaRentTemplate.send("rent-movie", rentMovieRequest);
+        kafkaRentAndReturnTemplate.send("rent-movie", rentAndReturnMovieRequest);
     }
 
-    public void sendReturnMovie(ReturnMovieRequest returnMovieRequest) {
+    public void sendReturnMovie(RentAndReturnMovieRequest rentAndReturnMovieRequest) {
 
-        kafkaReturnTemplate.send("return-movie", returnMovieRequest);
+        kafkaRentAndReturnTemplate.send("return-movie", rentAndReturnMovieRequest);
     }
 }

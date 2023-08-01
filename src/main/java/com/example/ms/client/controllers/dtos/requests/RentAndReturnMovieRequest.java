@@ -12,7 +12,7 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RentMovieRequest {
+public class RentAndReturnMovieRequest {
 
     @NotBlank (message = "Movie ID must be a positive number")
     @Positive (message = "Movie ID must be a positive number")

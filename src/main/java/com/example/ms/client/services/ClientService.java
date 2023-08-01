@@ -1,8 +1,7 @@
 package com.example.ms.client.services;
 
 import com.example.ms.client.controllers.dtos.requests.CreateClientRequest;
-import com.example.ms.client.controllers.dtos.requests.RentMovieRequest;
-import com.example.ms.client.controllers.dtos.requests.ReturnMovieRequest;
+import com.example.ms.client.controllers.dtos.requests.RentAndReturnMovieRequest;
 import com.example.ms.client.controllers.dtos.requests.UpdateClientRequest;
 import com.example.ms.client.controllers.dtos.responses.GetAllClientsResponse;
 import com.example.ms.client.controllers.dtos.responses.GetMoviesByClientNumberResponse;
@@ -28,7 +27,7 @@ public interface ClientService {
 
     Client getClientByClientNumber(String clientNumber);
 
-    String rentMovie(RentMovieRequest rentMovieRequest);
+    String rentMovie(RentAndReturnMovieRequest rentAndReturnMovieRequest);
 
-    String returnMovie(ReturnMovieRequest returnMovieRequest);
+    String returnMovie(RentAndReturnMovieRequest rentAndReturnMovieRequest);
 }
