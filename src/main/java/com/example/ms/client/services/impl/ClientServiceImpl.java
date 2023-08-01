@@ -1,19 +1,21 @@
 package com.example.ms.client.services.impl;
 
 import com.example.ms.client.controllers.dtos.requests.CreateClientRequest;
+import com.example.ms.client.controllers.dtos.requests.RentAndReturnMovieRequest;
 import com.example.ms.client.controllers.dtos.requests.UpdateClientRequest;
 import com.example.ms.client.controllers.dtos.responses.GetAllClientsResponse;
 import com.example.ms.client.controllers.dtos.responses.GetMoviesByClientNumberResponse;
 import com.example.ms.client.entities.Client;
+import com.example.ms.client.messaging.KafkaProducer;
 import com.example.ms.client.repositories.ClientRepository;
 import com.example.ms.client.services.ClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,14 +25,20 @@ public class ClientServiceImpl implements ClientService {
 
     private ClientRepository clientRepository;
 
+    private KafkaProducer kafkaProducer;
+
     private final RestTemplate restTemplate;
+
     @Value("${movie.service.url}")
     private String movieServiceUrl;
 
-    public ClientServiceImpl(ClientRepository clientRepository, RestTemplate restTemplate) {
+    @Autowired
+    public ClientServiceImpl(ClientRepository clientRepository, RestTemplate restTemplate, KafkaProducer kafkaProducer) {
         this.clientRepository = clientRepository;
         this.restTemplate = restTemplate;
+        this.kafkaProducer = kafkaProducer;
     }
+
     @Override
     public Client createClient(CreateClientRequest createClientRequest) {
 
@@ -152,5 +160,27 @@ public class ClientServiceImpl implements ClientService {
 
             return optionalClient.get();
         }   else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This client doesn't exists");
+    }
+
+    @Override
+    public String rentMovie(RentAndReturnMovieRequest rentAndReturnMovieRequest) {
+
+        Long movieId = rentAndReturnMovieRequest.getMovieId();
+        String clientNumber = rentAndReturnMovieRequest.getClientNumber();
+
+        Optional<Client> optionalClient = clientRepository.findByClientNumber(clientNumber);
+
+        if(optionalClient.isPresent()) {
+
+            kafkaProducer.sendRentMovie(rentAndReturnMovieRequest);
+            return "The information was delivered successfully. You will receive a confirmation email.";
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This client doesn't exists");
+    }
+
+    @Override
+    public String returnMovie(RentAndReturnMovieRequest rentAndReturnMovieRequest) {
+
+        kafkaProducer.sendReturnMovie(rentAndReturnMovieRequest);
+        return "The information was delivered successfully. You will receive a confirmation email.";
     }
 }

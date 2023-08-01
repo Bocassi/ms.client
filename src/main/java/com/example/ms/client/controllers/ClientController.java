@@ -1,6 +1,7 @@
 package com.example.ms.client.controllers;
 
 import com.example.ms.client.controllers.dtos.requests.CreateClientRequest;
+import com.example.ms.client.controllers.dtos.requests.RentAndReturnMovieRequest;
 import com.example.ms.client.controllers.dtos.requests.UpdateClientRequest;
 import com.example.ms.client.controllers.dtos.responses.GetAllClientsResponse;
 import com.example.ms.client.controllers.dtos.responses.GetMoviesByClientNumberResponse;
@@ -71,10 +72,22 @@ public class ClientController extends ExceptionController {
         return new ResponseEntity<>(clientService.getMoviesByClientNumber(clientNumber), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Gets a client by client number", notes = "Gets all the information of a client for a given client number", produces = MediaType.APPLICATION_JSON_VALUE)
     @GetMapping (value = "/client-by-clientNumber")
     public ResponseEntity<Client> getClientByClientNumber(@RequestParam String clientNumber) {
 
         return new ResponseEntity<>(clientService.getClientByClientNumber(clientNumber), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/rent")
+    public ResponseEntity<String> rentMovie(@RequestBody RentAndReturnMovieRequest rentAndReturnMovieRequest) {
+
+        return new ResponseEntity<>(clientService.rentMovie(rentAndReturnMovieRequest), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/return")
+    public ResponseEntity<String> returnMovie(@RequestBody RentAndReturnMovieRequest rentAndReturnMovieRequest) {
+
+        return new ResponseEntity<>(clientService.returnMovie(rentAndReturnMovieRequest), HttpStatus.OK);
+    }
 }
