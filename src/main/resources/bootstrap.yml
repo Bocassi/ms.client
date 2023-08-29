@@ -1,0 +1,14 @@
+
+spring:
+  config:
+    import: http://localhost:8888/client-api.yml
+
+  application:
+    name: client-api
+
+  cloud:
+    config:
+      label: develop
+
+  profiles:
+    active:
