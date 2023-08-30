@@ -1,3 +1,4 @@
+/*
 package com.example.ms.client.config;
 
 
@@ -32,4 +33,4 @@ public class SwaggerConfig {
                 .version("1.0.0")
                 .build();
     }
-}
+}*/
