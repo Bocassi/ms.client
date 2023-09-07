@@ -4,6 +4,7 @@ import com.example.ms.client.controllers.dtos.requests.CreateClientRequest;
 import com.example.ms.client.controllers.dtos.requests.UpdateClientRequest;
 import com.example.ms.client.controllers.dtos.responses.GetAllClientsResponse;
 import com.example.ms.client.entities.Client;
+import com.example.ms.client.messaging.KafkaProducer;
 import com.example.ms.client.repositories.ClientRepository;
 import com.example.ms.client.services.ClientService;
 import org.junit.jupiter.api.Assertions;
@@ -28,11 +29,13 @@ class ClientServiceImplTest {
 
     private RestTemplate restTemplate;
 
+    private KafkaProducer kafkaProducer;
+
     @BeforeEach
     void setUp() {
 
         MockitoAnnotations.openMocks(this);
-        clientService = new ClientServiceImpl(clientRepository, restTemplate);
+        clientService = new ClientServiceImpl(clientRepository, restTemplate, kafkaProducer);
     }
 
     @Test
